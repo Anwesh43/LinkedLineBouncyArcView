@@ -25,3 +25,28 @@ fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
 fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
 fun Float.sinify() : Float = Math.sin(this * Math.PI).toFloat()
+fun Float.cosify() : Float = 1 - Math.sin(Math.PI / 2 * (1 + this)).toFloat()
+
+fun Canvas.drawLineBouncyArc(scale : Float, size : Float, paint : Paint) {
+    for (j in 0..1) {
+        save()
+        rotate(-deg * scale.sinify())
+        drawLine(0f, 0f, size, 0f, paint)
+        restore()
+    }
+    drawArc(RectF(-size, -size, size, size), startDeg, deg * scale.divideScale(1, 2).cosify(), true, paint)
+}
+
+fun Canvas.drawLBANode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = h / (nodes + 1)
+    val size : Float = gap / sizeFactor
+    paint.color = foreColor
+    paint.strokeCap = Paint.Cap.ROUND
+    paint.color = foreColor
+    save()
+    translate(w / 2, gap * (i + 1))
+    drawLineBouncyArc(scale, size, paint)
+    restore()
+}
