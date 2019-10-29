@@ -36,7 +36,15 @@ fun Canvas.drawLineBouncyArc(scale : Float, size : Float, paint : Paint) {
         drawLine(0f, 0f, size, 0f, paint)
         restore()
     }
-    drawArc(RectF(-size, -size, size, size), startDeg, deg * scale.divideScale(1, 2).cosify(), true, paint)
+    drawLine(0f, 0f, 0f, -size * Math.floor(scale.divideScale(0,2).toDouble()).toFloat(), paint)
+    for (j in 0..1) {
+        if (j == 0) {
+            paint.style = Paint.Style.FILL
+        } else {
+            paint.style = Paint.Style.STROKE
+        }
+        drawArc(RectF(-size, -size, size, size), startDeg, deg * scale.divideScale(1, 2).cosify(), j % 2 == 0, paint)
+    }
 }
 
 fun Canvas.drawLBANode(i : Int, scale : Float, paint : Paint) {
